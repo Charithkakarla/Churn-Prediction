@@ -9,76 +9,55 @@ scaler = None
 def preprocess_data(employee_data, fit=False):
     """
     Preprocess employee data for churn prediction.
-    This must match the exact preprocessing used during model training.
+    Uses only 5 key features for prediction.
     
     Args:
-        employee_data: dict or DataFrame with employee features
+        employee_data: dict with 5 employee features
         fit: bool, whether to fit encoders/scaler (only during training)
     
     Returns:
         Preprocessed numpy array ready for model.predict()
     """
-    global label_encoders, scaler
-    
     # Convert to DataFrame if dict
     if isinstance(employee_data, dict):
         df = pd.DataFrame([employee_data])
     else:
         df = employee_data.copy()
     
-    # Expected features (adjust based on your training notebook)
+    # Simple encoding for department
+    dept_mapping = {
+        'Sales': 0, 'Engineering': 1, 'HR': 2, 
+        'Marketing': 3, 'Operations': 4
+    }
+    if 'department' in df.columns:
+        df['department'] = df['department'].map(dept_mapping).fillna(0)
+    
+    # Only 5 features needed
     expected_features = [
-        'tenure', 'monthly_salary', 'performance_score', 
-        'satisfaction_level', 'last_evaluation', 'number_project',
-        'average_monthly_hours', 'time_spend_company', 'work_accident',
-        'promotion_last_5years', 'department', 'salary_level'
+        'tenure',
+        'satisfaction_level', 
+        'performance_score',
+        'department',
+        'monthly_salary'
     ]
     
-    # Categorical columns
-    categorical_cols = ['department', 'salary_level']
+    # Select only the 5 features
+    X = df[expected_features]
     
-    # Encode categorical variables
-    for col in categorical_cols:
-        if col in df.columns:
-            if fit:
-                label_encoders[col] = LabelEncoder()
-                df[col] = label_encoders[col].fit_transform(df[col].astype(str))
-            else:
-                if col in label_encoders:
-                    # Handle unseen categories
-                    df[col] = df[col].astype(str)
-                    df[col] = df[col].apply(
-                        lambda x: label_encoders[col].transform([x])[0] 
-                        if x in label_encoders[col].classes_ 
-                        else 0
-                    )
-                else:
-                    df[col] = 0
+    # Return as numpy array
+    X_array = X.values.astype(float)
     
-    # Select features in correct order
-    available_features = [f for f in expected_features if f in df.columns]
-    X = df[available_features]
-    
-    # Scale features
-    if fit:
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-    else:
-        if scaler is not None:
-            X_scaled = scaler.transform(X)
-        else:
-            X_scaled = X.values
-    
-    return X_scaled
+    return X_array
 
 
 def get_feature_names():
     """Return the list of feature names used by the model"""
     return [
-        'tenure', 'monthly_salary', 'performance_score', 
-        'satisfaction_level', 'last_evaluation', 'number_project',
-        'average_monthly_hours', 'time_spend_company', 'work_accident',
-        'promotion_last_5years', 'department', 'salary_level'
+        'tenure',
+        'satisfaction_level',
+        'performance_score',
+        'department',
+        'monthly_salary'
     ]
 
 

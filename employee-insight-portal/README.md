@@ -6,7 +6,7 @@ A full-stack web application for employee churn prediction, analytics, and AI-po
 
 - **Employee Data Management** - View, search, and filter employee records with pagination
 - **Churn Prediction** - ML-powered predictions using pre-trained Random Forest/Logistic Regression model
-- **RAG Chatbot** - AI assistant for employee-related queries using LangChain + ChromaDB + OpenAI
+- **RAG Chatbot** - AI assistant for employee-related queries using Google Gemini + SentenceTransformers
 - **Admin Dashboard** - Interactive charts and KPIs (Recharts)
 - **Modern UI** - Clean, accessible design with olive green theme using TailwindCSS
 
@@ -21,9 +21,8 @@ A full-stack web application for employee churn prediction, analytics, and AI-po
 
 **Backend:**
 - FastAPI (Python)
-- LangChain (RAG pipeline)
-- ChromaDB (vector store)
-- OpenAI API (embeddings + LLM)
+- Google Gemini (AI generation)
+- SentenceTransformers (local embeddings)
 - scikit-learn (ML inference)
 - pandas (data processing)
 
@@ -31,7 +30,7 @@ A full-stack web application for employee churn prediction, analytics, and AI-po
 
 - Node.js 16+ and npm
 - Python 3.8+
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- Google Gemini API key ([Get one here](https://makersuite.google.com/app/apikey))
 - Your trained churn model (`churn_model.pkl`)
 
 ## 🚀 Quick Start
